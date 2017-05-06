@@ -383,7 +383,7 @@ const RCTWebRTCDemo = React.createClass({
                     renderRow={rowData => <Text>{`${rowData.user}: ${rowData.message}`}</Text>}
                 />
                 <TextInput
-                    style={{width: 200, height: 30, borderColor: 'gray', borderWidth: 1}}
+                    style={styles.textRoom}
                     onChangeText={value => this.setState({textRoomValue: value})}
                     value={this.state.textRoomValue}
                 />
@@ -397,24 +397,24 @@ const RCTWebRTCDemo = React.createClass({
     render() {
         const {height, width} = Dimensions.get('window');
         return (
-            <View style={{width: width, height: height}}>
+            <View style={styles.main}>
                 { this.state.status == 'ready' ?
-                    (<View style={{flexDirection: 'row'}}>
+                    (<View style={styles.cameraSection}>
                         <Text>
-                            {this.state.isFront ? "Use front camera" : "Use back camera"}
+                            {this.state.isFront ? "Using front camera" : "Using back camera"}
                         </Text>
                         <TouchableHighlight
-                            style={{borderWidth: 1, borderColor: 'black'}}
+                            style={styles.cameraToggle}
                             onPress={this._switchVideoType}>
                             <Text>Switch camera</Text>
                         </TouchableHighlight>
                     </View>) : null }
                 { this.state.status == 'ready' ?
-                    (<View style={{alignItems: 'center', justifyContent: 'center'}}>
+                    (<View style={styles.cover}>
                         <TextInput
                             ref='roomID'
                             autoCorrect={false}
-                            style={{width: 200, height: 40, borderColor: 'gray', borderWidth: 0}}
+                            style={styles.room}
                             onChangeText={(text) => this.setState({roomID: text})}
                             value={this.state.roomID}
                         />
@@ -422,14 +422,14 @@ const RCTWebRTCDemo = React.createClass({
                             onPress={this._press}
                             title="JOIN CALL"
                             color="#841584"
-                            disabled= {!this.state.roomID}
+                            disabled={!this.state.roomID}
                         />
                     </View>) : null
                 }
                 {
                     mapHash(this.state.remoteList, function (remote, index) {
                         return (
-                            <View style={styles.cover}>
+                            <View style={styles.videoRoom}>
                                 <RTCView key={index} streamURL={remote} style={{width: width, height: height / 2}}/>
                                 <RTCView key={index + 1} streamURL={remote} style={{width: width, height: height / 2}}/>
                             </View>
@@ -442,29 +442,14 @@ const RCTWebRTCDemo = React.createClass({
 });
 
 const styles = StyleSheet.create({
-    selfView: {
-        width: 200,
-        height: 150,
-    },
-    cover: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    remoteView: {
-        width: 50,
-        height: 50,
-    },
-    container: {
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    listViewContainer: {
-        height: 150,
-    },
+    main: {padding: 30, flexDirection: 'column', fontSize: 20},
+    cover: {alignItems: 'center', justifyContent: 'center'},
+    cameraToggle: {borderWidth: 1, borderColor: 'black'},
+    cameraSection: {margin: 20, flexDirection: 'row'},
+    listViewContainer: {height: 150},
+    room: {width: 200, height: 40, borderColor: 'gray', borderWidth: 0},
+    textRoom: {width: 200, height: 30, borderColor: 'gray', borderWidth: 1},
+    videoRoom: {alignItems: 'center', justifyContent: 'center', flexDirection: 'column'},
 });
 
 AppRegistry.registerComponent('RCTWebRTCDemo', () => RCTWebRTCDemo);
