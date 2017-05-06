@@ -242,6 +242,7 @@ function getStats() {
 let container;
 let oldHorizontalPosition;
 let oldPosition;
+let oldTilt;
 
 const RCTWebRTCDemo = React.createClass({
   getInitialState: function() {
@@ -258,10 +259,26 @@ const RCTWebRTCDemo = React.createClass({
       textRoomValue: '',
     };
   },
-  handleData(data) {
-    console.log(data);
-    this.setState({ x : data });
+
+  handleData(newTilt) {
+    console.log(newTilt);
+    if (this.oldTilt) {
+      const diff = this.oldTilt - newTilt;
+      const delta = diff > 0 ? diff : -diff;
+      if (delta > 5) {
+        let res = {
+          "rotate": 0,
+          "move": 0,
+          "tilt": diff
+        };
+        this.sendMessageToAll(JSON.stringify(res));
+        this.oldTilt = newTilt;
+      }
+    } else {
+        this.oldTilt = newTilt;
+    }
   },
+
   componentDidMount: function() {
     container = this;
     const EVENT_NAME = new NativeEventEmitter(TiltActivity);
@@ -283,9 +300,11 @@ const RCTWebRTCDemo = React.createClass({
         if (delta > 3) {
           let res = {
             "rotate": diff,
-            "move": 0
+            "move": 0,
+            "tilt": 0
           };
           this.sendMessageToAll(JSON.stringify(res));
+          this.oldHorizontalPosition = newHorizontalPosition;
         }
       } else {
           this.oldHorizontalPosition = newHorizontalPosition;
@@ -300,12 +319,12 @@ const RCTWebRTCDemo = React.createClass({
           const diff = this.oldPosition - newPosition;
           let res = {
               "rotate": 0,
-              "move": diff
+              "move": diff,
+              "tilt": 0
           };
           this.sendMessageToAll(JSON.stringify(res));
-        } else {
-          this.oldPosition = newPosition;
         }
+        this.oldPosition = newPosition;
     });
 
   },
