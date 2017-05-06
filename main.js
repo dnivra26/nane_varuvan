@@ -139,8 +139,9 @@ function createPC(socketId, isOffer) {
     };
 
     dataChannel.onmessage = function (event) {
-      console.log("dataChannel.onmessage:", event.data);
-      container.receiveTextData({user: socketId, message: event.data});
+      const message = JSON.parse(event.data);
+      console.log("dataChannel.onmessage:", message);
+      container.receiveTextData({user: socketId, message: message});
     };
 
     dataChannel.onopen = function () {
@@ -268,8 +269,13 @@ const RCTWebRTCDemo = React.createClass({
       let newHorizontalPosition = JSON.stringify(data)
     	console.log('New horizontal position: ', newHorizontalPosition);
       if (this.oldHorizontalPosition) {
-        if ((this.oldHorizontalPosition - newHorizontalPosition) > 3) {
-            this.sendMessageToAll(newHorizontalPosition)
+        const diff = this.oldHorizontalPosition - newHorizontalPosition;
+        const delta = diff > 0 ? diff : -diff;
+        if (delta > 3) {
+          let res = {
+            "rotate": diff
+          };
+          this.sendMessageToAll(JSON.stringify(res));
         }
       } else {
           this.oldHorizontalPosition = newHorizontalPosition;
