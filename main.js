@@ -39,7 +39,7 @@ function getLocalStream(isFront, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
     console.log(sourceInfos);
     let videoSourceId;
-    for (const i = 0; i < sourceInfos.length; i++) {
+    for (let i = 0; i < sourceInfos.length; i++) {
       const sourceInfo = sourceInfos[i];
       if(sourceInfo.kind == "video" && sourceInfo.facing == (isFront ? "front" : "back")) {
         videoSourceId = sourceInfo.id;
@@ -99,7 +99,7 @@ function createPC(socketId, isOffer) {
     if (isOffer) {
       createOffer();
     }
-  }
+  };
 
   pc.oniceconnectionstatechange = function(event) {
     console.log('oniceconnectionstatechange', event.target.iceConnectionState);
@@ -240,9 +240,6 @@ function getStats() {
 }
 
 let container;
-let oldHorizontalPosition;
-let oldPosition;
-let oldTilt;
 
 const RCTWebRTCDemo = React.createClass({
   getInitialState: function() {
@@ -289,10 +286,10 @@ const RCTWebRTCDemo = React.createClass({
   		this.setState({
   			headingIsSupported: didStart,
   		})
-  	})
+  	});
 
     DeviceEventEmitter.addListener('headingUpdated', data => {
-      let newHorizontalPosition = JSON.stringify(data)
+      let newHorizontalPosition = JSON.stringify(data);
     	console.log('New horizontal position: ', newHorizontalPosition);
       if (this.oldHorizontalPosition) {
         const diff = this.oldHorizontalPosition - newHorizontalPosition;
@@ -397,32 +394,6 @@ const RCTWebRTCDemo = React.createClass({
     );
   },
   render() {
-    // SensorManager.startAccelerometer(100); // To start the accelerometer with a minimum delay of 100ms between events.
-    // DeviceEventEmitter.addListener('Accelerometer', function (data) {
-      // console.log('Acc');
-      // console.log(data.x);
-      // console.log(data.y);
-      // console.log(data.z);
-    // });
-    // DeviceEventEmitter.addListener('Gyroscope', function (data) {
-    //   console.log('Gyro');
-    //   // console.log(data.x);
-    //   console.log(data.y);
-    //   // console.log(data.z);
-    // });
-    // SensorManager.startGyroscope(3000);
-    // SensorManager.startOrientation(18500);
-    // DeviceEventEmitter.addListener('Orientation', function (data) {
-    //   console.log('Orien');
-      // console.log(data.azimuth);
-      // console.log(data.pitch);
-      // console.log(data.roll);
-      /**
-      * data.azimuth
-      * data.pitch
-      * data.roll
-      **/
-    // });
     const {height, width} = Dimensions.get('window');
     return (
       <View style={{width: width, height: height}}>
