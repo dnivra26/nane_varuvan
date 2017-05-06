@@ -13,8 +13,9 @@ import {
   ListView,
   DeviceEventEmitter,
 } from 'react-native';
-import { SensorManager } from 'NativeModules';
+import { SensorManager, TiltActivity } from 'NativeModules';
 import io from 'socket.io-client/dist/socket.io';
+import { NativeEventEmitter } from 'react-native';
 
 const socket = io.connect('https://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
 
@@ -257,8 +258,15 @@ const RCTWebRTCDemo = React.createClass({
       textRoomValue: '',
     };
   },
+  handleData(data) {
+    console.log(data);
+    this.setState({ x : data });
+  },
   componentDidMount: function() {
     container = this;
+    const EVENT_NAME = new NativeEventEmitter(TiltActivity);
+    EVENT_NAME.addListener('EVENT_TAG',(message) => this.handleData(message));
+   TiltActivity.listenToTheTilt();
     ReactNativeHeading.start(1)
   	.then(didStart => {
   		this.setState({
@@ -283,7 +291,7 @@ const RCTWebRTCDemo = React.createClass({
           this.oldHorizontalPosition = newHorizontalPosition;
       }
     });
-    
+
     SensorManager.startStepCounter(1000);
     DeviceEventEmitter.addListener('StepCounter', data => {
       const newPosition = data.steps;
@@ -399,6 +407,7 @@ const RCTWebRTCDemo = React.createClass({
     const {height, width} = Dimensions.get('window');
     return (
       <View style={{width: width, height: height}}>
+        <Text>{this.state.x}</Text>
         { this.state.status == 'ready' ?
         (<View style={{flexDirection: 'row'}}>
           <Text>
