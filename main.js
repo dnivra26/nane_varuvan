@@ -10,8 +10,9 @@ import {
   Dimensions,
   TextInput,
   ListView,
+  DeviceEventEmitter,
 } from 'react-native';
-
+import { SensorManager } from 'NativeModules';
 import io from 'socket.io-client/dist/socket.io';
 
 const socket = io.connect('https://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
@@ -25,6 +26,7 @@ import {
   MediaStreamTrack,
   getUserMedia,
 } from 'react-native-webrtc';
+import ReactNativeHeading from 'react-native-heading';
 
 const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 
@@ -253,6 +255,16 @@ const RCTWebRTCDemo = React.createClass({
   },
   componentDidMount: function() {
     container = this;
+    ReactNativeHeading.start(1)
+  	.then(didStart => {
+  		this.setState({
+  			headingIsSupported: didStart,
+  		})
+  	})
+
+    DeviceEventEmitter.addListener('headingUpdated', data => {
+    	console.log('New heading is:', JSON.stringify(data));
+    });
   },
   _press(event) {
     this.refs.roomID.blur();
@@ -316,6 +328,37 @@ const RCTWebRTCDemo = React.createClass({
     );
   },
   render() {
+    // SensorManager.startStepCounter(1000);
+    // DeviceEventEmitter.addListener('StepCounter', function (data) {
+    //   console.log('Steps');
+    //   console.log(data.steps);
+    // });
+    // SensorManager.startAccelerometer(100); // To start the accelerometer with a minimum delay of 100ms between events.
+    // DeviceEventEmitter.addListener('Accelerometer', function (data) {
+      // console.log('Acc');
+      // console.log(data.x);
+      // console.log(data.y);
+      // console.log(data.z);
+    // });
+    // DeviceEventEmitter.addListener('Gyroscope', function (data) {
+    //   console.log('Gyro');
+    //   // console.log(data.x);
+    //   console.log(data.y);
+    //   // console.log(data.z);
+    // });
+    // SensorManager.startGyroscope(3000);
+    // SensorManager.startOrientation(18500);
+    // DeviceEventEmitter.addListener('Orientation', function (data) {
+    //   console.log('Orien');
+      // console.log(data.azimuth);
+      // console.log(data.pitch);
+      // console.log(data.roll);
+      /**
+      * data.azimuth
+      * data.pitch
+      * data.roll
+      **/
+    // });
     const {height, width} = Dimensions.get('window');
     return (
       <View style={{width: width, height: height}}>

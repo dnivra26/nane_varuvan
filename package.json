@@ -8,6 +8,8 @@
   "dependencies": {
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
+    "react-native-heading": "^1.1.1",
+    "react-native-sensor-manager": "^0.1.10",
     "react-native-webrtc": "git+https://git@github.com/oney/react-native-webrtc.git",
     "socket.io-client": "1.7.3"
   }
