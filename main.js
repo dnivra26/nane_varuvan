@@ -240,6 +240,7 @@ function getStats() {
 
 let container;
 let oldHorizontalPosition;
+let oldPosition;
 
 const RCTWebRTCDemo = React.createClass({
   getInitialState: function() {
@@ -273,7 +274,8 @@ const RCTWebRTCDemo = React.createClass({
         const delta = diff > 0 ? diff : -diff;
         if (delta > 3) {
           let res = {
-            "rotate": diff
+            "rotate": diff,
+            "move": 0
           };
           this.sendMessageToAll(JSON.stringify(res));
         }
@@ -281,6 +283,23 @@ const RCTWebRTCDemo = React.createClass({
           this.oldHorizontalPosition = newHorizontalPosition;
       }
     });
+    
+    SensorManager.startStepCounter(1000);
+    DeviceEventEmitter.addListener('StepCounter', data => {
+      const newPosition = data.steps;
+      console.log('New position: ', newPosition);
+        if (this.oldPosition) {
+          const diff = this.oldPosition - newPosition;
+          let res = {
+              "rotate": 0,
+              "move": diff
+          };
+          this.sendMessageToAll(JSON.stringify(res));
+        } else {
+          this.oldPosition = newPosition;
+        }
+    });
+
   },
 
   sendMessageToAll(message) {
@@ -351,11 +370,6 @@ const RCTWebRTCDemo = React.createClass({
     );
   },
   render() {
-    // SensorManager.startStepCounter(1000);
-    // DeviceEventEmitter.addListener('StepCounter', function (data) {
-    //   console.log('Steps');
-    //   console.log(data.steps);
-    // });
     // SensorManager.startAccelerometer(100); // To start the accelerometer with a minimum delay of 100ms between events.
     // DeviceEventEmitter.addListener('Accelerometer', function (data) {
       // console.log('Acc');
