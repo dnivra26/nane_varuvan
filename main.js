@@ -238,6 +238,7 @@ function getStats() {
 }
 
 let container;
+let oldHorizontalPosition;
 
 const RCTWebRTCDemo = React.createClass({
   getInitialState: function() {
@@ -264,8 +265,23 @@ const RCTWebRTCDemo = React.createClass({
   	})
 
     DeviceEventEmitter.addListener('headingUpdated', data => {
-    	console.log('New heading is:', JSON.stringify(data));
+      let newHorizontalPosition = JSON.stringify(data)
+    	console.log('New horizontal position: ', newHorizontalPosition);
+      if (this.oldHorizontalPosition) {
+        if ((this.oldHorizontalPosition - newHorizontalPosition) > 3) {
+            sendMessageToAll(newHorizontalPosition)
+        }
+      } else {
+          this.oldHorizontalPosition = newHorizontalPosition;
+      }
     });
+  },
+
+  sendMessageToAll(message) {
+    for (const key in pcPeers) {
+      const pc = pcPeers[key];
+      pc.textDataChannel.send(message);
+    }
   },
   _press(event) {
     this.refs.roomID.blur();
