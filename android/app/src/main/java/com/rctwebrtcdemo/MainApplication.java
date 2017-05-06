@@ -30,7 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
           new WebRTCModulePackage(),
               new SensorManagerPackage(),
               new ReactNativeHeadingPackage(),
-              new TiltReactPackage()
+              new TiltReactPackage(),
+              new UsbSerialPackage()
       );
     }
   };

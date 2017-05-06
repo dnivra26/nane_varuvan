@@ -1,6 +1,6 @@
 rootProject.name = 'RCTWebRTCDemo'
 
-include ':app'
+include ':app', ':usbserial-release'
 include ':WebRTCModule', ':app'
 project(':WebRTCModule').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-webrtc/android')
 include ':react-native-sensor-manager'

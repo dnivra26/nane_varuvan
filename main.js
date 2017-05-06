@@ -13,7 +13,7 @@ import {
     ListView,
     DeviceEventEmitter,
 } from 'react-native';
-import {SensorManager, TiltActivity} from 'NativeModules';
+import {SensorManager, TiltActivity, UsbSerial} from 'NativeModules';
 import io from 'socket.io-client/dist/socket.io';
 import {NativeEventEmitter} from 'react-native';
 
@@ -141,6 +141,7 @@ function createPC(socketId, isOffer) {
 
         dataChannel.onmessage = function (event) {
             const message = JSON.parse(event.data);
+            UsbSerial.write(JSON.stringify({s: message['move']*10, v: message['tilt']*25, h: message['rotate']*25}))
             console.log("dataChannel.onmessage:", message);
             container.receiveTextData({user: socketId, message: message});
         };
