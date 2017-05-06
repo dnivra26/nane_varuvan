@@ -269,7 +269,7 @@ const RCTWebRTCDemo = React.createClass({
     	console.log('New horizontal position: ', newHorizontalPosition);
       if (this.oldHorizontalPosition) {
         if ((this.oldHorizontalPosition - newHorizontalPosition) > 3) {
-            sendMessageToAll(newHorizontalPosition)
+            this.sendMessageToAll(newHorizontalPosition)
         }
       } else {
           this.oldHorizontalPosition = newHorizontalPosition;
