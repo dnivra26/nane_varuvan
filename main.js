@@ -398,7 +398,6 @@ const RCTWebRTCDemo = React.createClass({
         const {height, width} = Dimensions.get('window');
         return (
             <View style={{width: width, height: height}}>
-                <Text>{this.state.x}</Text>
                 { this.state.status == 'ready' ?
                     (<View style={{flexDirection: 'row'}}>
                         <Text>
