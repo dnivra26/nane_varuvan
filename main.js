@@ -422,6 +422,7 @@ const RCTWebRTCDemo = React.createClass({
                             onPress={this._press}
                             title="JOIN CALL"
                             color="#841584"
+                            disabled= {!this.state.roomID}
                         />
                     </View>) : null
                 }
