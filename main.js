@@ -46,7 +46,7 @@ function getLocalStream(isFront, callback) {
             }
         }
         getUserMedia({
-            audio: false,
+            audio: true,
             video: {
                 mandatory: {
                     minWidth: 1280, // Provide your own width, height and frame rate here
@@ -260,7 +260,6 @@ const RCTWebRTCDemo = React.createClass({
     },
 
     handleData(newTilt) {
-        console.log(newTilt);
         if (this.oldTilt) {
             const diff = this.oldTilt - newTilt;
             const delta = diff > 0 ? diff : -diff;
