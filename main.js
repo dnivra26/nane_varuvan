@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  Button,
   View,
   Dimensions,
   TextInput,
@@ -374,18 +375,19 @@ const RCTWebRTCDemo = React.createClass({
           </TouchableHighlight>
         </View>) : null }
         { this.state.status == 'ready' ?
-          (<View>
+          (<View style={{alignItems: 'center', justifyContent: 'center'}}>
             <TextInput
               ref='roomID'
               autoCorrect={false}
-              style={{width: 200, height: 40, borderColor: 'gray', borderWidth: 1}}
+              style={{width: 200, height: 40, borderColor: 'gray', borderWidth: 0}}
               onChangeText={(text) => this.setState({roomID: text})}
               value={this.state.roomID}
             />
-            <TouchableHighlight
-              onPress={this._press}>
-              <Text>Enter room</Text>
-            </TouchableHighlight>
+            <Button
+              onPress={this._press}
+              title="JOIN CALL"
+              color="#841584"
+            />
           </View>) : null
         }
         {
