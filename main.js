@@ -141,7 +141,10 @@ function createPC(socketId, isOffer) {
 
         dataChannel.onmessage = function (event) {
             const message = JSON.parse(event.data);
-            UsbSerial.write(JSON.stringify({s: message['move']*10, v: message['tilt']*25, h: message['rotate']*25}))
+            // UsbSerial.write(JSON.stringify({s: message['move']*10, v: message['tilt']*25, h: message['rotate']*25}))
+            // container.control(message['rotate']);
+            // container.control2(message['tilt']);
+
             console.log("dataChannel.onmessage:", message);
             container.receiveTextData({user: socketId, message: message});
         };
@@ -242,6 +245,8 @@ function getStats() {
 }
 
 let container;
+let x;
+let y;
 
 const RCTWebRTCDemo = React.createClass({
     getInitialState: function () {
@@ -276,6 +281,40 @@ const RCTWebRTCDemo = React.createClass({
             this.oldTilt = newTilt;
         }
     },
+    control(value) {
+      console.log('OUTSIDE: ', x);
+      if (!x) {
+        console.log('INSIDE');
+        fetch('https://api.particle.io/v1/devices/54ff70066678574957410567/horizontal', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `access_token=7fd28cacab8033605db7a2b6245c5242a4227665&args=${Number(value)*-20}`,
+        }).then(console.log, console.error)
+
+        x = setTimeout(()=> {
+          x = null;
+        }, 1000);
+      }
+    },
+    control2(value) {
+      console.log('OUTSIDE: ', y);
+      if (!y) {
+        console.log('INSIDE');
+        fetch('https://api.particle.io/v1/devices/54ff70066678574957410567/vertical', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `access_token=7fd28cacab8033605db7a2b6245c5242a4227665&args=${Number(value)*-10}`,
+        }).then(console.log, console.error)
+
+        y = setTimeout(()=> {
+          y = null;
+        }, 1000);
+      }
+    },
 
     componentDidMount: function () {
         container = this;
@@ -291,7 +330,6 @@ const RCTWebRTCDemo = React.createClass({
 
         DeviceEventEmitter.addListener('headingUpdated', data => {
             let newHorizontalPosition = JSON.stringify(data);
-            console.log('New horizontal position: ', newHorizontalPosition);
             if (this.oldHorizontalPosition) {
                 const diff = this.oldHorizontalPosition - newHorizontalPosition;
                 const delta = diff > 0 ? diff : -diff;
